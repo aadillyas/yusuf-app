@@ -19,6 +19,24 @@
       --border: #e5e5e5;
       --text: #1a1a1a;
       --muted: #888;
+      --input-bg: #fff;
+      --feed-bg: #fff;
+      --stat-bg: #fff;
+      --modal-bg: #fff;
+      --modal-input-border: #d1d5db;
+    }
+
+    html.dark {
+      --bg: #0f0f13;
+      --card-bg: #1c1c24;
+      --border: #2e2e3a;
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --input-bg: #1c1c24;
+      --feed-bg: #1c1c24;
+      --stat-bg: #1c1c24;
+      --modal-bg: #1c1c24;
+      --modal-input-border: #3a3a4a;
     }
 
     body {
@@ -97,7 +115,7 @@
     }
 
     .tab.active {
-      background: #fff;
+      background: var(--card-bg);
       color: var(--text);
       border-color: var(--border);
     }
@@ -170,7 +188,7 @@
 
     .card p {
       font-size: 0.85rem;
-      color: #555;
+      color: var(--muted);
       line-height: 1.55;
       display: -webkit-box;
       -webkit-line-clamp: 5;
@@ -255,7 +273,8 @@
       font-family: inherit;
       outline: none;
       margin: 20px 0 8px;
-      background: #fff;
+      background: var(--input-bg);
+      color: var(--text);
     }
     .search-bar:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
 
@@ -263,7 +282,7 @@
     .feed { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
 
     .feed-item {
-      background: #fff;
+      background: var(--feed-bg);
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 14px 16px;
@@ -286,7 +305,7 @@
     }
 
     .stat-card {
-      background: #fff;
+      background: var(--stat-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 16px;
@@ -310,7 +329,7 @@
     .overlay.open { display: flex; }
 
     .modal {
-      background: #fff;
+      background: var(--modal-bg);
       border-radius: 16px;
       padding: 28px;
       width: 100%;
@@ -326,12 +345,14 @@
 
     .modal input, .modal textarea, .modal select {
       width: 100%;
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--modal-input-border);
       border-radius: 8px;
       padding: 10px 12px;
       font-size: 0.9rem;
       font-family: inherit;
       outline: none;
+      background: var(--input-bg);
+      color: var(--text);
     }
 
     .modal input:focus, .modal textarea:focus, .modal select:focus {
@@ -367,6 +388,7 @@
       <option value="Dad">🛠️ Dad</option>
       <option value="Sister">✨ Sister</option>
     </select>
+    <button id="dark-toggle" onclick="toggleDark()" title="Toggle dark mode" style="background:rgba(255,255,255,0.1);color:#fff;padding:8px 10px;font-size:1rem;border:1px solid rgba(255,255,255,0.2);">🌙</button>
     <button id="new-btn" onclick="openModal()">+ New Note</button>
   </div>
 </header>
@@ -747,6 +769,17 @@
   }
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  function toggleDark() {
+    const dark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('yusuf_dark', dark ? '1' : '0');
+    document.getElementById('dark-toggle').textContent = dark ? '☀️' : '🌙';
+  }
+
+  if (localStorage.getItem('yusuf_dark') === '1') {
+    document.documentElement.classList.add('dark');
+    document.getElementById('dark-toggle').textContent = '☀️';
+  }
 
   render();
 </script>
