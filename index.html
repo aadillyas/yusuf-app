@@ -3,120 +3,305 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Notes</title>
+  <title>Yusuf's Family Notes</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --blue: #2563eb;
+      --blue-dark: #1d4ed8;
+      --red: #dc2626;
+      --green: #16a34a;
+      --yellow: #d97706;
+      --purple: #7c3aed;
+      --bg: #f8f7ff;
+      --card-bg: #fff;
+      --border: #e5e5e5;
+      --text: #1a1a1a;
+      --muted: #888;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f5f5f5;
-      color: #1a1a1a;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
     }
 
+    /* ── Header ── */
     header {
-      background: #fff;
-      border-bottom: 1px solid #e5e5e5;
-      padding: 16px 24px;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      color: #fff;
+      padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
     }
 
-    header h1 { font-size: 1.25rem; font-weight: 600; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { font-size: 1.5rem; }
+    .logo h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.3px; }
+    .logo span { font-size: 0.7rem; background: #6366f1; padding: 2px 7px; border-radius: 99px; letter-spacing: 0.5px; }
 
-    button {
-      cursor: pointer;
-      border: none;
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    #user-select {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
       border-radius: 8px;
-      font-size: 0.875rem;
-      font-weight: 500;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
     }
+
+    #user-select option { background: #312e81; color: #fff; }
+
+    button { cursor: pointer; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 500; }
 
     #new-btn {
-      background: #2563eb;
+      background: #6366f1;
       color: #fff;
       padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #new-btn:hover { background: #4f46e5; }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      padding: 16px 24px 0;
+      max-width: 1100px;
+      margin: 0 auto;
     }
 
-    #new-btn:hover { background: #1d4ed8; }
+    .tab {
+      padding: 8px 18px;
+      border-radius: 8px 8px 0 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-bottom: none;
+      background: transparent;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
 
+    .tab.active {
+      background: #fff;
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    /* ── Main ── */
     main {
-      max-width: 900px;
-      margin: 32px auto;
-      padding: 0 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 40px;
     }
 
-    #empty {
-      text-align: center;
-      color: #888;
-      margin-top: 80px;
-      font-size: 1rem;
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── Section heading ── */
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 24px 0 16px;
     }
 
+    .section-heading h2 { font-size: 1rem; font-weight: 600; }
+
+    /* ── Ideas banner ── */
+    .ideas-banner {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 1px solid #f59e0b;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 20px 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+
+    .ideas-banner .trophy { font-size: 1.6rem; }
+
+    /* ── Card grid ── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 16px;
     }
 
     .card {
-      background: #fff;
-      border: 1px solid #e5e5e5;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 8px;
+      transition: box-shadow 0.15s;
       position: relative;
+      overflow: hidden;
     }
 
-    .card h2 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+    .card-accent {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
     }
+
+    .card h2 { font-size: 0.95rem; font-weight: 600; padding-top: 4px; }
 
     .card p {
       font-size: 0.85rem;
       color: #555;
-      line-height: 1.5;
+      line-height: 1.55;
       display: -webkit-box;
-      -webkit-line-clamp: 4;
+      -webkit-line-clamp: 5;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
 
-    .card-actions {
+    .card-meta {
       display: flex;
-      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
       margin-top: 4px;
     }
 
-    .edit-btn {
-      background: #f0f0f0;
-      color: #333;
-      padding: 5px 12px;
+    .avatar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--muted);
     }
 
+    .avatar-circle {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .date { font-size: 0.75rem; color: #bbb; }
+
+    .card-actions { display: flex; gap: 8px; }
+
+    .like-btn {
+      background: #f0f0f0;
+      color: #555;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .like-btn:hover { background: #fee2e2; color: #dc2626; }
+    .like-btn.liked { background: #fee2e2; color: #dc2626; }
+
+    .edit-btn { background: #f0f0f0; color: #333; padding: 4px 10px; font-size: 0.8rem; }
     .edit-btn:hover { background: #e0e0e0; }
 
-    .delete-btn {
-      background: #fee2e2;
-      color: #dc2626;
-      padding: 5px 12px;
-    }
-
+    .delete-btn { background: #fee2e2; color: #dc2626; padding: 4px 10px; font-size: 0.8rem; }
     .delete-btn:hover { background: #fecaca; }
 
-    /* Modal */
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-weight: 500;
+    }
+
+    /* ── Pinned ── */
+    .pin-icon {
+      position: absolute;
+      top: 12px; right: 12px;
+      font-size: 1rem;
+    }
+
+    /* ── Empty ── */
+    #empty {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 60px;
+      font-size: 0.95rem;
+    }
+
+    /* ── Search ── */
+    .search-bar {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      margin: 20px 0 8px;
+      background: #fff;
+    }
+    .search-bar:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+
+    /* ── Activity feed ── */
+    .feed { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+
+    .feed-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 0.875rem;
+    }
+
+    .feed-item .feed-icon { font-size: 1.2rem; }
+    .feed-item strong { color: var(--text); }
+    .feed-item span { color: var(--muted); font-size: 0.8rem; display: block; margin-top: 2px; }
+
+    /* ── Stats ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-card .num { font-size: 2rem; font-weight: 700; }
+    .stat-card .label { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── Modal ── */
     .overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.45);
       z-index: 100;
       align-items: center;
       justify-content: center;
@@ -129,16 +314,17 @@
       border-radius: 16px;
       padding: 28px;
       width: 100%;
-      max-width: 480px;
+      max-width: 500px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      gap: 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      margin: 16px;
     }
 
     .modal h2 { font-size: 1.1rem; }
 
-    .modal input, .modal textarea {
+    .modal input, .modal textarea, .modal select {
       width: 100%;
       border: 1px solid #d1d5db;
       border-radius: 8px;
@@ -148,54 +334,102 @@
       outline: none;
     }
 
-    .modal input:focus, .modal textarea:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    .modal input:focus, .modal textarea:focus, .modal select:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
     }
 
-    .modal textarea { resize: vertical; min-height: 140px; }
+    .modal textarea { resize: vertical; min-height: 120px; }
+
+    .modal-row { display: flex; gap: 10px; }
+    .modal-row > * { flex: 1; }
 
     .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
-    .cancel-btn {
-      background: #f0f0f0;
-      color: #333;
-      padding: 8px 18px;
-    }
-
+    .cancel-btn { background: #f0f0f0; color: #333; padding: 8px 18px; }
     .cancel-btn:hover { background: #e0e0e0; }
 
-    .save-btn {
-      background: #2563eb;
-      color: #fff;
-      padding: 8px 18px;
-    }
-
-    .save-btn:hover { background: #1d4ed8; }
-
-    .date {
-      font-size: 0.75rem;
-      color: #aaa;
-    }
+    .save-btn { background: #6366f1; color: #fff; padding: 8px 18px; }
+    .save-btn:hover { background: #4f46e5; }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Notes</h1>
-  <button id="new-btn" onclick="openModal()">+ New Note</button>
+  <div class="logo">
+    <span class="logo-icon">💡</span>
+    <h1>Yusuf's Brainstorm <span>FAMILY</span></h1>
+  </div>
+  <div class="header-right">
+    <select id="user-select" onchange="switchUser()">
+      <option value="Yusuf">👑 Yusuf</option>
+      <option value="Mum">🌸 Mum</option>
+      <option value="Dad">🛠️ Dad</option>
+      <option value="Sister">✨ Sister</option>
+    </select>
+    <button id="new-btn" onclick="openModal()">+ New Note</button>
+  </div>
 </header>
 
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('ideas')">💡 Yusuf's Ideas</button>
+  <button class="tab" onclick="switchTab('family')">🏠 Family Notes</button>
+  <button class="tab" onclick="switchTab('activity')">📋 Activity</button>
+</div>
+
 <main>
-  <div id="empty">No notes yet. Hit <strong>+ New Note</strong> to start.</div>
-  <div class="grid" id="grid"></div>
+
+  <!-- IDEAS PANEL -->
+  <div class="panel active" id="panel-ideas">
+    <div class="ideas-banner">
+      <span class="trophy">🏆</span>
+      <div>
+        <strong>Yusuf's Genius Corner</strong><br>
+        Ground-breaking ideas that are definitely going to change the world. Patent pending on all of them.
+      </div>
+    </div>
+    <input class="search-bar" id="search-ideas" placeholder="Search Yusuf's genius ideas..." oninput="renderIdeas()" />
+    <div class="grid" id="ideas-grid"></div>
+  </div>
+
+  <!-- FAMILY PANEL -->
+  <div class="panel" id="panel-family">
+    <div class="section-heading">
+      <h2>Family Notes</h2>
+    </div>
+    <input class="search-bar" id="search-family" placeholder="Search family notes..." oninput="renderFamily()" />
+    <div id="empty" style="display:none;">No notes yet. Hit <strong>+ New Note</strong> to start.</div>
+    <div class="grid" id="family-grid"></div>
+  </div>
+
+  <!-- ACTIVITY PANEL -->
+  <div class="panel" id="panel-activity">
+    <div class="section-heading"><h2>Recent Activity</h2></div>
+    <div class="stats-row" id="stats-row"></div>
+    <div class="feed" id="feed"></div>
+  </div>
+
 </main>
 
+<!-- Modal -->
 <div class="overlay" id="overlay" onclick="closeIfOutside(event)">
   <div class="modal">
     <h2 id="modal-title">New Note</h2>
     <input id="note-title" type="text" placeholder="Title" maxlength="80" />
     <textarea id="note-body" placeholder="Write your note here..."></textarea>
+    <div class="modal-row">
+      <select id="note-category">
+        <option value="General">📝 General</option>
+        <option value="Shopping">🛒 Shopping</option>
+        <option value="Reminder">⏰ Reminder</option>
+        <option value="Idea">💡 Idea</option>
+        <option value="Important">🚨 Important</option>
+      </select>
+      <select id="note-pin">
+        <option value="0">Not pinned</option>
+        <option value="1">📌 Pin this note</option>
+      </select>
+    </div>
     <div class="modal-actions">
       <button class="cancel-btn" onclick="closeModal()">Cancel</button>
       <button class="save-btn" onclick="saveNote()">Save</button>
@@ -204,40 +438,250 @@
 </div>
 
 <script>
-  let notes = JSON.parse(localStorage.getItem('notes') || '[]');
+  // ── Seed data: Yusuf's "genius" ideas ──
+  const YUSUF_IDEAS = [
+    {
+      id: 'y1', title: 'Alarm Clock That Argues With You',
+      body: 'Instead of snoozing, the alarm starts debating you on whether sleep is even necessary. It quotes stoic philosophers until you get up out of spite. Patent pending.',
+      date: 'Jan 3, 2024', likes: 14, tag: '🧠 Philosophy Tech', color: '#6366f1'
+    },
+    {
+      id: 'y2', title: 'Reverse Uber — You Rate the Driver First',
+      body: 'Before the driver picks you up, you have to submit a review of them based purely on vibes. If your vibes are wrong, they cancel on you. Revolutionary accountability.',
+      date: 'Feb 17, 2024', likes: 31, tag: '🚗 Disruption', color: '#2563eb'
+    },
+    {
+      id: 'y3', title: 'Netflix for Meals — MealFlix',
+      body: 'You scroll through thousands of meal options with cinematic trailers showing the food being prepared. 80% of the time you just end up ordering the same biryani. Coming soon to Series B.',
+      date: 'Mar 5, 2024', likes: 47, tag: '🍿 Food Tech', color: '#dc2626'
+    },
+    {
+      id: 'y4', title: 'AI That Tells You What You Actually Want',
+      body: 'You say "I don\'t know what I want for dinner." The AI has been watching you for 3 years and says "You want shawarma. You always want shawarma." Raises $40M in seed round.',
+      date: 'Apr 12, 2024', likes: 89, tag: '🤖 AI Startup', color: '#16a34a'
+    },
+    {
+      id: 'y5', title: 'Gym Membership That Gets Cheaper the Less You Go',
+      body: 'Completely inverts the gym business model. The gym makes money from people who never show up, so why not just reward them directly? Disruptive. Bold. Lazy.',
+      date: 'May 20, 2024', likes: 102, tag: '💪 Wellness', color: '#d97706'
+    },
+    {
+      id: 'y6', title: 'A Fridge That Judges You',
+      body: 'Every time you open it after midnight it sighs loudly. Integrates with your health app to send disappointed emojis to your mum. This is the accountability economy.',
+      date: 'Jun 1, 2024', likes: 77, tag: '🧊 Smart Home', color: '#7c3aed'
+    },
+    {
+      id: 'y7', title: 'Social Media But Only for Plants',
+      body: 'Your plants post once a day based on soil moisture and light levels. "Feeling a bit dry today 😔" gets 400 likes. No negativity. No arguments. Just plants thriving.',
+      date: 'Jul 8, 2024', likes: 203, tag: '🌱 Green Tech', color: '#16a34a'
+    },
+    {
+      id: 'y8', title: 'Subscription Box for Problems You Already Have',
+      body: 'Every month we send you a curated box of your existing anxieties, nicely packaged with artisanal tissue paper. Solving problems is overrated. Sit with them. $29/month.',
+      date: 'Aug 14, 2024', likes: 55, tag: '📦 DTC Brand', color: '#dc2626'
+    },
+  ];
+
+  const MEMBERS = {
+    Yusuf: { color: '#6366f1', emoji: '👑' },
+    Mum:   { color: '#ec4899', emoji: '🌸' },
+    Dad:   { color: '#2563eb', emoji: '🛠️' },
+    Sister:{ color: '#16a34a', emoji: '✨' },
+  };
+
+  const CAT_COLORS = {
+    General: '#6366f1', Shopping: '#16a34a', Reminder: '#d97706',
+    Idea: '#2563eb', Important: '#dc2626'
+  };
+
+  let currentUser = 'Yusuf';
   let editingId = null;
+  let currentTab = 'ideas';
+
+  let notes = JSON.parse(localStorage.getItem('yusuf_notes') || '[]');
+  let likes = JSON.parse(localStorage.getItem('yusuf_likes') || '{}');
+  let activity = JSON.parse(localStorage.getItem('yusuf_activity') || '[]');
+
+  function switchUser() {
+    currentUser = document.getElementById('user-select').value;
+    render();
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + tab).classList.add('active');
+    document.querySelectorAll('.tab')[['ideas','family','activity'].indexOf(tab)].classList.add('active');
+    render();
+  }
 
   function render() {
-    const grid = document.getElementById('grid');
+    renderIdeas();
+    renderFamily();
+    renderActivity();
+  }
+
+  function renderIdeas() {
+    const q = (document.getElementById('search-ideas')?.value || '').toLowerCase();
+    const grid = document.getElementById('ideas-grid');
+    grid.innerHTML = '';
+    YUSUF_IDEAS
+      .filter(i => !q || i.title.toLowerCase().includes(q) || i.body.toLowerCase().includes(q))
+      .forEach(idea => {
+        const liked = !!likes['idea_' + idea.id];
+        const likeCount = (idea.likes || 0) + (liked ? 1 : 0);
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-accent" style="background:${idea.color}"></div>
+          <div style="margin-top:2px">
+            <span class="tag" style="background:${idea.color}22;color:${idea.color}">${esc(idea.tag)}</span>
+          </div>
+          <h2>${esc(idea.title)}</h2>
+          <p>${esc(idea.body)}</p>
+          <div class="card-meta">
+            <div class="avatar">
+              <div class="avatar-circle" style="background:#6366f1">Y</div>
+              Yusuf
+            </div>
+            <span class="date">${idea.date}</span>
+          </div>
+          <div class="card-actions">
+            <button class="like-btn ${liked ? 'liked' : ''}" onclick="toggleIdeaLike('${idea.id}', this)">
+              ❤️ ${likeCount}
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+  }
+
+  function toggleIdeaLike(id, btn) {
+    const key = 'idea_' + id;
+    likes[key] = !likes[key];
+    localStorage.setItem('yusuf_likes', JSON.stringify(likes));
+    const idea = YUSUF_IDEAS.find(i => i.id === id);
+    const likeCount = (idea.likes || 0) + (likes[key] ? 1 : 0);
+    btn.textContent = '❤️ ' + likeCount;
+    btn.classList.toggle('liked', !!likes[key]);
+    if (likes[key]) {
+      logActivity(currentUser, `liked Yusuf's idea: "${idea.title}"`, '❤️');
+    }
+  }
+
+  function renderFamily() {
+    const q = (document.getElementById('search-family')?.value || '').toLowerCase();
+    const grid = document.getElementById('family-grid');
     const empty = document.getElementById('empty');
     grid.innerHTML = '';
-    if (notes.length === 0) {
+    let filtered = notes.filter(n =>
+      !q || n.title.toLowerCase().includes(q) || n.body.toLowerCase().includes(q)
+    );
+    const pinned = filtered.filter(n => n.pinned);
+    const rest = filtered.filter(n => !n.pinned);
+    const ordered = [...pinned, ...rest.slice().reverse()];
+    if (ordered.length === 0) {
       empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+      ordered.forEach(note => {
+        const m = MEMBERS[note.author] || MEMBERS.Yusuf;
+        const color = CAT_COLORS[note.category] || '#6366f1';
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-accent" style="background:${color}"></div>
+          ${note.pinned ? '<span class="pin-icon">📌</span>' : ''}
+          <div style="margin-top:2px">
+            <span class="tag" style="background:${color}22;color:${color}">${catEmoji(note.category)} ${esc(note.category)}</span>
+          </div>
+          <h2>${esc(note.title || 'Untitled')}</h2>
+          <p>${esc(note.body)}</p>
+          <div class="card-meta">
+            <div class="avatar">
+              <div class="avatar-circle" style="background:${m.color}">${esc(note.author[0])}</div>
+              ${m.emoji} ${esc(note.author)}
+            </div>
+            <span class="date">${note.date}</span>
+          </div>
+          <div class="card-actions">
+            <button class="like-btn ${likes['note_'+note.id]?'liked':''}" onclick="toggleNoteLike(${note.id}, this)">
+              ❤️ ${(note.likes||0)+(likes['note_'+note.id]?1:0)}
+            </button>
+            ${note.author === currentUser ? `
+              <button class="edit-btn" onclick="openModal(${note.id})">Edit</button>
+              <button class="delete-btn" onclick="deleteNote(${note.id})">Delete</button>
+            ` : ''}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+  }
+
+  function toggleNoteLike(id, btn) {
+    const key = 'note_' + id;
+    likes[key] = !likes[key];
+    localStorage.setItem('yusuf_likes', JSON.stringify(likes));
+    const note = notes.find(n => n.id === id);
+    if (!note) return;
+    const count = (note.likes || 0) + (likes[key] ? 1 : 0);
+    btn.textContent = '❤️ ' + count;
+    btn.classList.toggle('liked', !!likes[key]);
+    if (likes[key]) logActivity(currentUser, `liked "${note.title || 'a note'}"`, '❤️');
+  }
+
+  function catEmoji(cat) {
+    return {General:'📝',Shopping:'🛒',Reminder:'⏰',Idea:'💡',Important:'🚨'}[cat] || '📝';
+  }
+
+  function renderActivity() {
+    const feed = document.getElementById('feed');
+    const stats = document.getElementById('stats-row');
+    feed.innerHTML = '';
+    stats.innerHTML = '';
+
+    const totalNotes = notes.length;
+    const totalLikes = Object.values(likes).filter(Boolean).length;
+    const authors = [...new Set(notes.map(n => n.author))];
+
+    [
+      { num: totalNotes, label: 'Family Notes' },
+      { num: YUSUF_IDEAS.length, label: "Yusuf's Ideas" },
+      { num: totalLikes, label: 'Total Likes' },
+      { num: authors.length, label: 'Active Members' },
+    ].forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'stat-card';
+      el.innerHTML = `<div class="num">${s.num}</div><div class="label">${s.label}</div>`;
+      stats.appendChild(el);
+    });
+
+    const items = activity.slice().reverse().slice(0, 20);
+    if (items.length === 0) {
+      feed.innerHTML = '<p style="color:#aaa;text-align:center;margin-top:20px">No activity yet.</p>';
       return;
     }
-    empty.style.display = 'none';
-    notes.slice().reverse().forEach(note => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <h2>${esc(note.title || 'Untitled')}</h2>
-        <p>${esc(note.body)}</p>
-        <span class="date">${note.date}</span>
-        <div class="card-actions">
-          <button class="edit-btn" onclick="openModal(${note.id})">Edit</button>
-          <button class="delete-btn" onclick="deleteNote(${note.id})">Delete</button>
+    items.forEach(a => {
+      const m = MEMBERS[a.user] || MEMBERS.Yusuf;
+      const el = document.createElement('div');
+      el.className = 'feed-item';
+      el.innerHTML = `
+        <span class="feed-icon">${a.icon}</span>
+        <div>
+          <div><strong>${m.emoji} ${esc(a.user)}</strong> ${esc(a.action)}</div>
+          <span>${a.time}</span>
         </div>
       `;
-      grid.appendChild(card);
+      feed.appendChild(el);
     });
   }
 
-  function esc(str) {
-    return String(str)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;');
+  function logActivity(user, action, icon) {
+    activity.push({ user, action, icon, time: new Date().toLocaleString() });
+    if (activity.length > 100) activity.shift();
+    localStorage.setItem('yusuf_activity', JSON.stringify(activity));
   }
 
   function openModal(id) {
@@ -247,9 +691,13 @@
       const note = notes.find(n => n.id === id);
       document.getElementById('note-title').value = note.title;
       document.getElementById('note-body').value = note.body;
+      document.getElementById('note-category').value = note.category || 'General';
+      document.getElementById('note-pin').value = note.pinned ? '1' : '0';
     } else {
       document.getElementById('note-title').value = '';
       document.getElementById('note-body').value = '';
+      document.getElementById('note-category').value = 'General';
+      document.getElementById('note-pin').value = '0';
     }
     document.getElementById('overlay').classList.add('open');
     document.getElementById('note-title').focus();
@@ -267,30 +715,38 @@
   function saveNote() {
     const title = document.getElementById('note-title').value.trim();
     const body = document.getElementById('note-body').value.trim();
+    const category = document.getElementById('note-category').value;
+    const pinned = document.getElementById('note-pin').value === '1';
     if (!body && !title) return;
     const now = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     if (editingId) {
       const note = notes.find(n => n.id === editingId);
-      note.title = title;
-      note.body = body;
-      note.date = now;
+      note.title = title; note.body = body; note.category = category; note.pinned = pinned; note.date = now;
+      logActivity(currentUser, `edited "${title || 'a note'}"`, '✏️');
     } else {
-      notes.push({ id: Date.now(), title, body, date: now });
+      notes.push({ id: Date.now(), title, body, category, pinned, author: currentUser, date: now, likes: 0 });
+      logActivity(currentUser, `added a new note: "${title || 'Untitled'}"`, '📝');
     }
-    localStorage.setItem('notes', JSON.stringify(notes));
+    localStorage.setItem('yusuf_notes', JSON.stringify(notes));
     closeModal();
+    if (currentTab !== 'family') switchTab('family');
     render();
   }
 
   function deleteNote(id) {
+    const note = notes.find(n => n.id === id);
     notes = notes.filter(n => n.id !== id);
-    localStorage.setItem('notes', JSON.stringify(notes));
+    localStorage.setItem('yusuf_notes', JSON.stringify(notes));
+    if (note) logActivity(currentUser, `deleted "${note.title || 'a note'}"`, '🗑️');
     render();
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-  });
+  function esc(str) {
+    return String(str || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
   render();
 </script>
